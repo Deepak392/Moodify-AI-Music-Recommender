@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AI-powered emotion detection with personalized music recommendations">
+    <meta name="keywords" content="emotion detection, AI, music recommendations, mood analysis">
+    <title>Moodify - AI-Powered Emotion Detection & Music Recommendations</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+</head>
+<body>
+    <div class="container" role="main">
+        <header class="header">
+            <h1>🎭 Moodify</h1>
+            <p>AI-Powered Emotion Detection with Music Recommendations</p>
+        </header>
+
+        <section class="upload-section" id="uploadSection" aria-label="Image upload section">
+            <h2>Upload an Image or Use Webcam</h2>
+            <p>Supported formats: JPG, PNG | Detect emotions and get Spotify music suggestions</p>
+            <div class="button-group" role="group" aria-label="Upload options">
+                <button class="btn btn-upload" onclick="document.getElementById('fileInput').click()" aria-label="Upload image file">
+                    📁 Upload Image
+                </button>
+                <button class="btn btn-webcam" onclick="toggleWebcam()" aria-label="Open webcam for live capture">
+                    📷 Use Webcam
+                </button>
+            </div>
+            <input type="file" id="fileInput" accept="image/*" onchange="handleFileUpload(event)" aria-label="Select image file" style="display: none;">
+        </section>
+
+        <div class="loading" id="loading" style="display: none;" role="status" aria-live="polite">
+            <div class="spinner" aria-hidden="true"></div>
+            <p>Processing...</p>
+        </div>
+
+        <div class="error" id="error" style="display: none;" role="alert" aria-live="assertive"></div>
+
+        <section class="webcam-section" id="webcamSection" style="display: none;" aria-label="Webcam capture section">
+            <h3>Webcam Emotion Detection</h3>
+            <video id="webcam" width="480" height="360" autoplay muted aria-label="Live webcam feed"></video>
+            <div class="button-group" role="group" aria-label="Webcam controls">
+                <button class="btn btn-capture" onclick="captureFromWebcam()" aria-label="Capture current frame and analyze">
+                    📸 Capture & Analyze
+                </button>
+                <button class="btn btn-stop" onclick="stopWebcam()" aria-label="Stop webcam">
+                    ❌ Stop Camera
+                </button>
+            </div>
+        </section>
+
+        <section class="results-section" id="resultsSection" style="display: none;" aria-label="Analysis results">
+            <div class="image-preview">
+                <h3>Uploaded Image</h3>
+                <img id="previewImage" alt="Uploaded image for analysis">
+            </div>
+            <div class="prediction-results">
+                <div class="emotion-display">
+                    <span id="emotionEmoji" role="img" aria-label="Detected emotion emoji"></span>
+                    <div id="emotionName" role="heading" aria-level="3"></div>
+                    <div id="confidenceScore" aria-label="Confidence percentage"></div>
+                </div>
+                <div class="chart-container">
+                    <canvas id="probabilityChart" aria-label="Emotion probability chart"></canvas>
+                </div>
+            </div>
+        </section>
+
+        <section class="music-section" id="musicSection" style="display: none;" aria-label="Music recommendations">
+            <h3>🎵 Music Recommendations</h3>
+            <p id="musicSource">Based on your detected emotion, here are some Spotify songs for your mood:</p>
+            <div id="songRecommendations" role="list" aria-label="Recommended songs"></div>
+            <p class="security-note">
+                <strong>🔒 Security Note:</strong> 
+                All API credentials are securely stored on the backend server. 
+                No sensitive information is exposed to the client.
+            </p>
+        </section>
+
+        <footer class="credits">
+            <h3>About Moodify</h3>
+            <p><strong>Model:</strong> ViT trained on FER-2013 dataset (via Hugging Face)</p>
+            <p><strong>Input:</strong> Images for emotion detection</p>
+            <p><strong>Emotions:</strong> Angry, Disgust, Fear, Happy, Sad, Surprise, Neutral</p>
+            <p><strong>Technologies:</strong> Hugging Face Inference API, Chart.js, HTML, CSS, JavaScript</p>
+            <p><strong>Security:</strong> Backend API with secure credential management</p>
+        </footer>
+    </div>
+    
+    <script src="js/script.js"></script>
+    <script>
+        // Register service worker for offline functionality
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('Service Worker registered:', registration);
+                    })
+                    .catch(error => {
+                        console.log('Service Worker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>
